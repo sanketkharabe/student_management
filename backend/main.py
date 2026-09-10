@@ -1,7 +1,17 @@
 from fastapi import FastAPI, HTTPException
 from supabase import create_client
+from pydantic import BaseModel
 from dotenv import load_dotenv
 import os
+
+class StudentCreate(BaseModel):
+    id: int
+    name: str
+    course: str
+    marks: int
+
+class StudentUpdate(BaseModel):
+    marks: int
 
 # Load variables from .env
 load_dotenv()
@@ -34,20 +44,13 @@ print("Supabase connected successfully!")
 # ==========================================
 
 @app.post("/students")
-def create_student(id: int, name: str, course: str, marks: int):
-
-    student = {
-        "id": id,
-        "name": name,
-        "course": course,
-        "marks": marks
-    }
+def create_student(student: StudentCreate):
 
     try:
         response = (
             supabase
             .table("students")
-            .insert(student)
+            .insert(student.model_dump())
             .execute()
         )
 
@@ -104,18 +107,23 @@ def get_students():
 @app.get("/students/{student_id}")
 def get_student(student_id: int):
 
-    response = (
-        supabase
-        .table("students")
-        .select("*")
-        .eq("id", student_id)
-        .execute()
-    )
+    try:
+        response = (
+            supabase
+            .table("students")
+            .select("*")
+            .eq("id", student_id)
+            .execute()
+        )
 
-    return {
-        "message": "Student fetched successfully",
-        "data": response.data
-    }
+        return {
+            "message": "Student fetched successfully",
+            "data": response.data
+        }
+
+    except Exception as e:
+        print("SUPABASE ERROR:", repr(e))
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 # -------------------------
@@ -123,24 +131,25 @@ def get_student(student_id: int):
 # -------------------------
 
 @app.put("/students/{student_id}")
-def update_student(student_id: int, marks: int):
+def update_student(student_id: int, student_update: StudentUpdate):
 
-    updated_data = {
-        "marks": marks
-    }
+    try:
+        response = (
+            supabase
+            .table("students")
+            .update(student_update.model_dump())
+            .eq("id", student_id)
+            .execute()
+        )
 
-    response = (
-        supabase
-        .table("students")
-        .update(updated_data)
-        .eq("id", student_id)
-        .execute()
-    )
+        return {
+            "message": "Student updated successfully",
+            "data": response.data
+        }
 
-    return {
-        "message": "Student updated successfully",
-        "data": response.data
-    }
+    except Exception as e:
+        print("SUPABASE ERROR:", repr(e))
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 # -------------------------
@@ -150,17 +159,22 @@ def update_student(student_id: int, marks: int):
 @app.delete("/students/{student_id}")
 def delete_student(student_id: int):
 
-    response = (
-        supabase
-        .table("students")
-        .delete()
-        .eq("id", student_id)
-        .execute()
-    )
+    try:
+        response = (
+            supabase
+            .table("students")
+            .delete()
+            .eq("id", student_id)
+            .execute()
+        )
 
-    return {
-        "message": "Student deleted successfully",
-        "data": response.data
-    }
+        return {
+            "message": "Student deleted successfully",
+            "data": response.data
+        }
+
+    except Exception as e:
+        print("SUPABASE ERROR:", repr(e))
+        raise HTTPException(status_code=500, detail=str(e))
 
 
