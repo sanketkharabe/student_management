@@ -1,6 +1,7 @@
 import gradio as gr
 import requests
 
+# FastAPI backend URL
 BASE_URL = "http://127.0.0.1:8000"
 
 
@@ -28,10 +29,10 @@ def create_student(student_id, name, course, marks):
 
 
 # ==========================================
-# GET ALL STUDENTS
+# READ ALL STUDENTS
 # ==========================================
 
-def get_all_students():
+def get_students():
 
     try:
         response = requests.get(
@@ -45,7 +46,7 @@ def get_all_students():
 
 
 # ==========================================
-# GET ONE STUDENT
+# READ ONE STUDENT
 # ==========================================
 
 def get_student(student_id):
@@ -99,166 +100,180 @@ def delete_student(student_id):
 
 
 # ==========================================
-# GRADIO UI
+# GRADIO INTERFACE
 # ==========================================
 
 with gr.Blocks(title="Student Management System") as app:
 
     gr.Markdown("# 🎓 Student Management System")
+    gr.Markdown("### FastAPI + Supabase + Gradio")
+
 
     # ======================================
     # CREATE
     # ======================================
 
-    gr.Markdown("## Create Student")
+    with gr.Tab("Create Student"):
 
-    student_id = gr.Number(
-        label="Student ID",
-        precision=0
-    )
+        gr.Markdown("## Add New Student")
 
-    name = gr.Textbox(
-        label="Name"
-    )
+        student_id = gr.Number(
+            label="Student ID",
+            precision=0
+        )
 
-    course = gr.Textbox(
-        label="Course"
-    )
+        name = gr.Textbox(
+            label="Name",
+            placeholder="Enter student name"
+        )
 
-    marks = gr.Number(
-        label="Marks",
-        precision=0
-    )
+        course = gr.Textbox(
+            label="Course",
+            placeholder="Enter course"
+        )
 
-    create_button = gr.Button(
-        "Create Student"
-    )
+        marks = gr.Number(
+            label="Marks",
+            precision=0
+        )
 
-    create_output = gr.JSON(
-        label="Result"
-    )
+        create_button = gr.Button(
+            "Create Student"
+        )
 
-    create_button.click(
-        fn=create_student,
-        inputs=[
-            student_id,
-            name,
-            course,
-            marks
-        ],
-        outputs=create_output
-    )
+        create_result = gr.JSON(
+            label="Result"
+        )
 
-
-    # ======================================
-    # GET ALL
-    # ======================================
-
-    gr.Markdown("## View All Students")
-
-    get_all_button = gr.Button(
-        "Get All Students"
-    )
-
-    all_students_output = gr.JSON(
-        label="Students"
-    )
-
-    get_all_button.click(
-        fn=get_all_students,
-        inputs=[],
-        outputs=all_students_output
-    )
+        create_button.click(
+            fn=create_student,
+            inputs=[
+                student_id,
+                name,
+                course,
+                marks
+            ],
+            outputs=create_result
+        )
 
 
     # ======================================
-    # GET ONE
+    # READ ALL
     # ======================================
 
-    gr.Markdown("## Find Student")
+    with gr.Tab("All Students"):
 
-    find_id = gr.Number(
-        label="Student ID",
-        precision=0
-    )
+        gr.Markdown("## All Students")
 
-    find_button = gr.Button(
-        "Find Student"
-    )
+        get_button = gr.Button(
+            "Get All Students"
+        )
 
-    find_output = gr.JSON(
-        label="Student"
-    )
+        students_result = gr.JSON(
+            label="Students"
+        )
 
-    find_button.click(
-        fn=get_student,
-        inputs=find_id,
-        outputs=find_output
-    )
+        get_button.click(
+            fn=get_students,
+            inputs=[],
+            outputs=students_result
+        )
+
+
+    # ======================================
+    # READ ONE
+    # ======================================
+
+    with gr.Tab("Find Student"):
+
+        gr.Markdown("## Find Student")
+
+        find_id = gr.Number(
+            label="Student ID",
+            precision=0
+        )
+
+        find_button = gr.Button(
+            "Find Student"
+        )
+
+        find_result = gr.JSON(
+            label="Student"
+        )
+
+        find_button.click(
+            fn=get_student,
+            inputs=find_id,
+            outputs=find_result
+        )
 
 
     # ======================================
     # UPDATE
     # ======================================
 
-    gr.Markdown("## Update Marks")
+    with gr.Tab("Update Student"):
 
-    update_id = gr.Number(
-        label="Student ID",
-        precision=0
-    )
+        gr.Markdown("## Update Student Marks")
 
-    new_marks = gr.Number(
-        label="New Marks",
-        precision=0
-    )
+        update_id = gr.Number(
+            label="Student ID",
+            precision=0
+        )
 
-    update_button = gr.Button(
-        "Update Marks"
-    )
+        new_marks = gr.Number(
+            label="New Marks",
+            precision=0
+        )
 
-    update_output = gr.JSON(
-        label="Result"
-    )
+        update_button = gr.Button(
+            "Update Marks"
+        )
 
-    update_button.click(
-        fn=update_student,
-        inputs=[
-            update_id,
-            new_marks
-        ],
-        outputs=update_output
-    )
+        update_result = gr.JSON(
+            label="Result"
+        )
+
+        update_button.click(
+            fn=update_student,
+            inputs=[
+                update_id,
+                new_marks
+            ],
+            outputs=update_result
+        )
 
 
     # ======================================
     # DELETE
     # ======================================
 
-    gr.Markdown("## Delete Student")
+    with gr.Tab("Delete Student"):
 
-    delete_id = gr.Number(
-        label="Student ID",
-        precision=0
-    )
+        gr.Markdown("## Delete Student")
 
-    delete_button = gr.Button(
-        "Delete Student"
-    )
+        delete_id = gr.Number(
+            label="Student ID",
+            precision=0
+        )
 
-    delete_output = gr.JSON(
-        label="Result"
-    )
+        delete_button = gr.Button(
+            "Delete Student"
+        )
 
-    delete_button.click(
-        fn=delete_student,
-        inputs=delete_id,
-        outputs=delete_output
-    )
+        delete_result = gr.JSON(
+            label="Result"
+        )
+
+        delete_button.click(
+            fn=delete_student,
+            inputs=delete_id,
+            outputs=delete_result
+        )
 
 
 # ==========================================
-# START APP
+# START GRADIO
 # ==========================================
 
 app.launch()
