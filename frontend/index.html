@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management System</title>
+
+```
+<link rel="stylesheet" href="style.css">
+```
+
+</head>
+
+<body>
+
+```
+<div class="container">
+
+    <h1>🎓 Student Management System</h1>
+    <p class="subtitle">HTML + CSS + JavaScript + FastAPI + Supabase</p>
+
+
+    <!-- ================= CREATE ================= -->
+
+    <section class="card">
+
+        <h2>Add New Student</h2>
+
+        <div class="form-group">
+            <label>Student ID</label>
+            <input type="number" id="studentId" placeholder="Enter student ID">
+        </div>
+
+        <div class="form-group">
+            <label>Name</label>
+            <input type="text" id="name" placeholder="Enter student name">
+        </div>
+
+        <div class="form-group">
+            <label>Course</label>
+            <input type="text" id="course" placeholder="Enter course">
+        </div>
+
+        <div class="form-group">
+            <label>Marks</label>
+            <input type="number" id="marks" placeholder="Enter marks">
+        </div>
+
+        <button onclick="createStudent()">Create Student</button>
+
+        <div id="createResult" class="result"></div>
+
+    </section>
+
+
+    <!-- ================= READ ALL ================= -->
+
+    <section class="card">
+
+        <h2>All Students</h2>
+
+        <button onclick="getStudents()">
+            Get All Students
+        </button>
+
+        <div id="studentsResult" class="result"></div>
+
+    </section>
+
+
+    <!-- ================= READ ONE ================= -->
+
+    <section class="card">
+
+        <h2>Find Student</h2>
+
+        <div class="form-group">
+            <label>Student ID</label>
+            <input type="number" id="findId" placeholder="Enter student ID">
+        </div>
+
+        <button onclick="getStudent()">
+            Find Student
+        </button>
+
+        <div id="findResult" class="result"></div>
+
+    </section>
+
+
+    <!-- ================= UPDATE ================= -->
+
+    <section class="card">
+
+        <h2>Update Student Marks</h2>
+
+        <div class="form-group">
+            <label>Student ID</label>
+            <input type="number" id="updateId" placeholder="Enter student ID">
+        </div>
+
+        <div class="form-group">
+            <label>New Marks</label>
+            <input type="number" id="newMarks" placeholder="Enter new marks">
+        </div>
+
+        <button onclick="updateStudent()">
+            Update Marks
+        </button>
+
+        <div id="updateResult" class="result"></div>
+
+    </section>
+
+
+    <!-- ================= DELETE ================= -->
+
+    <section class="card">
+
+        <h2>Delete Student</h2>
+
+        <div class="form-group">
+            <label>Student ID</label>
+            <input type="number" id="deleteId" placeholder="Enter student ID">
+        </div>
+
+        <button class="delete-button" onclick="deleteStudent()">
+            Delete Student
+        </button>
+
+        <div id="deleteResult" class="result"></div>
+
+    </section>
+
+</div>
+
+
+<script src="script.js"></script>
+```
+
+</body>
+</html>

@@ -1,13 +1,35 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from supabase import create_client
 from dotenv import load_dotenv
 import os
 
-# Load variables from .env
+
+# ==========================================
+# LOAD ENVIRONMENT VARIABLES
+# ==========================================
+
 load_dotenv()
 
-# Create FastAPI application
+
+# ==========================================
+# CREATE FASTAPI APPLICATION
+# ==========================================
+
 app = FastAPI()
+
+
+# ==========================================
+# CORS CONFIGURATION
+# ==========================================
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 # ==========================================
@@ -17,14 +39,18 @@ app = FastAPI()
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
+
 # Check credentials
+
 if not SUPABASE_URL:
     raise ValueError("SUPABASE_URL is missing from .env")
 
 if not SUPABASE_KEY:
     raise ValueError("SUPABASE_KEY is missing from .env")
 
+
 # Connect to Supabase
+
 supabase = create_client(
     SUPABASE_URL,
     SUPABASE_KEY
@@ -34,11 +60,27 @@ print("Supabase connected successfully!")
 
 
 # ==========================================
+# HOME ROUTE
+# ==========================================
+
+@app.get("/")
+def home():
+    return {
+        "message": "Student Management API is running"
+    }
+
+
+# ==========================================
 # CREATE STUDENT
 # ==========================================
 
 @app.post("/students")
-def create_student(id: int,name: str, course: str, marks: int):
+def create_student(
+    id: int,
+    name: str,
+    course: str,
+    marks: int
+):
 
     student = {
         "id": id,
@@ -102,11 +144,14 @@ def get_student(student_id: int):
 
 
 # ==========================================
-# UPDATE STUDENT
+# UPDATE STUDENT MARKS
 # ==========================================
 
 @app.put("/students/{student_id}")
-def update_student(student_id: int, marks: int):
+def update_student(
+    student_id: int,
+    marks: int
+):
 
     updated_data = {
         "marks": marks
